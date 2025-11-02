@@ -1,20 +1,17 @@
 #include <stdio.h>
 
-void updateSectorStatus();
-void querySectorStatus();
-void runSystemDiagnostic();
-
-int rows, cols;
-int grid[100][100];
-int POWER = 0;
-int OVERLOAD = 1;
-int MAINTENANCE = 2;
+void updateSectorStatus(int rows, int cols, int grid[100][100]);
+void querySectorStatus(int rows, int cols, int grid[100][100]);
+void runSystemDiagnostic(int rows, int cols, int grid[100][100]);
 
 int main() {
+    int rows, cols;
     printf("Enter number of rows: ");
     scanf("%d", &rows);
     printf("Enter number of columns: ");
     scanf("%d", &cols);
+
+    int grid[100][100];
     for (int i = 0; i < rows; i++)
         for (int j = 0; j < cols; j++)
             grid[i][j] = 0;
@@ -30,22 +27,29 @@ int main() {
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
-        if (choice == 1)
-            updateSectorStatus();
-        else if (choice == 2)
-            querySectorStatus();
-        else if (choice == 3)
-            runSystemDiagnostic();
-        else if (choice == 4)
-            printf("Exiting...\n");
-        else
-            printf("Invalid choice!\n");
+        switch(choice) {
+            case 1:
+                updateSectorStatus(rows, cols, grid);
+                break;
+            case 2:
+                querySectorStatus(rows, cols, grid);
+                break;
+            case 3:
+                runSystemDiagnostic(rows, cols, grid);
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
     }
 
     return 0;
 }
 
-void updateSectorStatus() {
+void updateSectorStatus(int rows, int cols, int grid[100][100]) {
+    int POWER = 0, OVERLOAD = 1, MAINTENANCE = 2;
     int r, c, flag, action;
     printf("Enter row and column: ");
     scanf("%d %d", &r, &c);
@@ -66,14 +70,15 @@ void updateSectorStatus() {
     scanf("%d", &action);
 
     if (action == 1)
-        grid[r][c] = grid[r][c] | (1 << flag);
+        grid[r][c] |= (1 << flag);
     else
-        grid[r][c] = grid[r][c] & ~(1 << flag); 
+        grid[r][c] &= ~(1 << flag);
 
     printf("Status updated\n");
 }
 
-void querySectorStatus() {
+void querySectorStatus(int rows, int cols, int grid[100][100]) {
+    int POWER = 0, OVERLOAD = 1, MAINTENANCE = 2;
     int r, c;
     printf("Enter sector row and column: ");
     scanf("%d %d", &r, &c);
@@ -102,7 +107,8 @@ void querySectorStatus() {
         printf("Maintenance Required: NO\n");
 }
 
-void runSystemDiagnostic() {
+void runSystemDiagnostic(int rows, int cols, int grid[100][100]) {
+    int OVERLOAD = 1, MAINTENANCE = 2;
     int overloadCount = 0, maintenanceCount = 0;
 
     for (int i = 0; i < rows; i++) {
