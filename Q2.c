@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 void getcustomerinfo(char name[], char cnic[]);
 void displayinventory(int productCodes[], int quantities[], float prices[], int size);
@@ -45,10 +46,10 @@ int main() {
                 showinvoice(name, cnic, productCodes, prices, cartitem, qty, cartcount);
                 break;
             case 7:
-                printf("Exiting.\n");
+                printf("Exiting program.\n");
                 break;
             default:
-                printf("Invalid choice!\n");
+                printf("Invalid choice! Please try again.\n");
         }
     }
     return 0;
@@ -113,5 +114,38 @@ float displaybill(int productCodes[], float prices[], int cartitem[], int qty[],
     printf("Enter promocode (if any): ");
     scanf(" %[^\n]", promocode);
 
-    // Manual comparison with "Eid2025"
-    if (promocode[0]()
+    // Apply discount if promocode matches
+    if (strcmp(promocode, "Eid2025") == 0) {
+        float discount = total * 0.25;
+        float discountedTotal = total - discount;
+        printf("Promocode applied! 25%% discount = %.2f\n", discount);
+        printf("Discounted Total: %.2f\n", discountedTotal);
+        return discountedTotal;
+    } else {
+        printf("No valid promocode applied.\n");
+        return total;
+    }
+}
+
+void showinvoice(char name[], char cnic[], int productCodes[], float prices[], int cartitem[], int qty[], int cartcount) {
+    printf("\n---------- INVOICE ----------\n");
+    printf("Customer Name: %s\n", name);
+    printf("CNIC: %s\n", cnic);
+    printf("-----------------------------\n");
+
+    float total = 0;
+    for (int i = 0; i < cartcount; i++) {
+        float subtotal = prices[cartitem[i]] * qty[i];
+        total += subtotal;
+        printf("Code %d | Qty %d | Unit %.2f | Subtotal %.2f\n",
+               productCodes[cartitem[i]], qty[i], prices[cartitem[i]], subtotal);
+    }
+
+    float discount = total * 0.25;
+    float discountedTotal = total - discount;
+
+    printf("-----------------------------\n");
+    printf("Total (no discount): %.2f\n", total);
+    printf("Total (with Eid2025 discount): %.2f\n", discountedTotal);
+
+}
